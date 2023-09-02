@@ -1,34 +1,30 @@
 #!/usr/bin/python3
 import sys
+import sympy
 
-def factorization():
-
-    """
-    # RSA Laboratories states that: for each RSA number n
-    # ...there exist prime numbers p and q such that
-    # n = q. The problem is to find these two primes, given only n.
-    # VARIABLE(" "):
-    # factorize(int) Factorize all the things!
-    # This task is the same as task 0, except:
-    """
+# Function to factorize a number using sympy
+def factorize(n):
     try:
-        files = sys.argv[1]
-        with open(files) as f:
-            for numbs in f:
-                numbs = int(numbs)
-                if numbs % 2 == 0:
-                    print("{}={}*{}".format(numbs, numbs // 2, 2))
-                    continue
-                run = 3
-                while run < numbs // 2:
-                    if numbs % run == 0:
-                        print("{}={}*{}".format(numbs, numbs // run, run))
-                        break
-                    run = run + 2
-                if run == (numbs // 2) + 1:
-                    print("{}={}*{}".format(numbs, numbs, 1))
-    except (IndexError):
-        pass
+        factors = sympy.factorint(n)  # Use sympy's factorint to factorize the number
+        return factors
+    except sympy.SympifyError:
+        return None
 
+# Main function to process the command-line argument and factor the number
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python factor_rsa.py <number>")
+        sys.exit(1)
 
-factorization()
+    n = int(sys.argv[1])  # Get the number to factor from the command line
+    factors = factorize(n)  # Factor the number using the factorize function
+
+    if factors is None:
+        print(f"Unable to factor {n}.")
+    else:
+        print(f"Factors of {n}:")
+        for factor, exponent in factors.items():
+            print(f"{factor}^{exponent}")  # Print the factors and their exponents
+
+if __name__ == "__main__":
+    main()
